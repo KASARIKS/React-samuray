@@ -1,0 +1,28 @@
+.header img {
+  width: 25px;
+  height: 25px;
+}
+
+.header {
+  background-color: greenyellow;
+}
+
+.nav {
+  background-color: darkkhaki;
+  padding-right: 50px;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: row;
+} 
+
+.avatar-img {
+  width: 100px;
+  height: 100px;
+}
+
+.head-img {
+  width: 100vw;
+  height: 130px;
+}

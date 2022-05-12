@@ -1,0 +1,14 @@
+.dialogs {
+    background-color: dodgerblue;
+    width: 100%;
+    display: flex;
+    padding: 5px;
+}
+
+.messages {
+    margin-left: 100px;
+}
+
+.dialogs .active {
+    color: white;
+}
