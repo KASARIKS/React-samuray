@@ -5,7 +5,6 @@ import AppendPostForm from './AppendPostForm/AppendPostForm'
 import Post from './Post/Post'
 
 const MyPosts = (props) => {
-    console.log('Rerender')
     let local_state = {
         post_text: props.post_text
     }

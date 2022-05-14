@@ -116,28 +116,20 @@ export function toggleIsFetching(isFetching) {
 }
 
 // Thunk which change users in initialState, simply it used for changing usersPage
-export const getUsersThunkCreator = (page_num, pageSize) => {
-    return dispatch => {
-        dispatch(toggleIsFetching(true))
-        usersAPI.getUsers(page_num, pageSize)
-            .then(data => {
-                dispatch(toggleIsFetching(false))
-                dispatch(setUsers(data.items))
-                dispatch(setTotalUsersCount(data.totalCount))
-            })
-    }
+export const getUsersThunkCreator = (page_num, pageSize) => async dispatch => {
+    dispatch(toggleIsFetching(true))
+    let data = await usersAPI.getUsers(page_num, pageSize)
+    dispatch(toggleIsFetching(false))
+    dispatch(setUsers(data.items))
+    dispatch(setTotalUsersCount(data.totalCount))
 }
 
 // Thunk which follow or unfollow, and set a status of follow process
-export const followThunkCreator = (user_id, follow_callback, follow_callback_api, toggleIsFollowing) => {
-    return dispatch => {
-        dispatch(toggleIsFetching(true))
-        toggleIsFollowing(true, user_id)
-        follow_callback_api(user_id)
-            .then((data) => {
-                dispatch(toggleIsFetching(false, user_id))
-                toggleIsFollowing(false, user_id)
-                if (data.resultCode === 0) follow_callback(user_id)
-            })
-    }
+export const followThunkCreator = (user_id, follow_callback, follow_callback_api, toggleIsFollowing) => async dispatch => {
+    dispatch(toggleIsFetching(true))
+    toggleIsFollowing(true, user_id)
+    let data = await follow_callback_api(user_id)
+    dispatch(toggleIsFetching(false, user_id))
+    toggleIsFollowing(false, user_id)
+    if (data.resultCode === 0) follow_callback(user_id)
 }

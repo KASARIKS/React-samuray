@@ -68,40 +68,35 @@ export const setInitializedActionCreator = (initialized) => {
 }
 
 // This thunk set initialState of this reducer, then this initialState sends to server and displays
-export const getMyProfileThunkCreator = (toggleIsFetching) => {
-    return dispatch => {
-        return authAPI.getMyProfile()
-            .then(response => {
-                toggleIsFetching(false)
-                let { id, login, email } = response.data.data
-                if (response.data.resultCode === 0) {
-                    dispatch(setUserData(id, email, login, true))
-                }
-            })
+export const getMyProfileThunkCreator = (toggleIsFetching) =>
+    async dispatch => {
+        let response = await authAPI.getMyProfile()
+        toggleIsFetching(false)
+        if (response.data.resultCode === 0) {
+            let { id, login, email } = response.data.data
+            dispatch(setUserData(id, email, login, true))
+        }
+
+    }
+
+export const loginThunkCreator = (login_state, setStatus) => async (dispatch) => {
+    let response = await authAPI.login(login_state)
+
+    toggleIsFetching(false)
+    if (response.data.resultCode === 0) {
+        dispatch(getMyProfileThunkCreator(toggleIsFetching))
+    }
+    else {
+        setStatus({ error: response.data.messages })
     }
 }
 
-export const loginThunkCreator = (login_state, setStatus) => (dispatch) => {
-    authAPI.login(login_state)
-        .then(response => {
-            toggleIsFetching(false)
-            if (response.data.resultCode === 0) {
-                dispatch(getMyProfileThunkCreator(toggleIsFetching))
-            }
-            else {
-                setStatus({ error: response.data.messages })
-            }
-        })
-}
-
-export const logoutThunkCreator = () => (dispatch) => {
-    authAPI.logout()
-        .then(response => {
-            toggleIsFetching(false)
-            if (response.data.resultCode === 0) {
-                dispatch(setUserData(null, null, null, false))
-            }
-        })
+export const logoutThunkCreator = () => async (dispatch) => {
+    let response = await authAPI.logout()
+    toggleIsFetching(false)
+    if (response.data.resultCode === 0) {
+        dispatch(setUserData(null, null, null, false))
+    }
 }
 
 export const initializeThunkCreator = (toggleIsFetching) => (dispatch) => {

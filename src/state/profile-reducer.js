@@ -94,17 +94,14 @@ export function toggleIsFetching(isFetching) {
 }
 
 // Set user_profile to object, from server
-export const getProfileThunkCreator = (toggleIsFetching, userId) => {
-    return dispatch => {
-        usersAPI.getProfile(userId).then((response) => {
-            toggleIsFetching(false)
-            dispatch(setUserProfile(response.data))
-        })
-    }
+export const getProfileThunkCreator = (toggleIsFetching, userId) => async dispatch => {
+    let response = await usersAPI.getProfile(userId)
+    toggleIsFetching(false)
+    dispatch(setUserProfile(response.data))
 }
 
 // Change status
-export const setStatusActionCreator = (status) => {
+export const setStatusActionCreator = status => {
     return {
         type: SET_STATUS,
         status: status,
@@ -112,25 +109,17 @@ export const setStatusActionCreator = (status) => {
 }
 
 // Get status from server by id
-export const getStatusThunkCreator = (id) => dispatch => {
-    profileAPI.getStatus(id).then(
-        response => {
-            dispatch(setStatusActionCreator(response.data))
-        }
-    )
+export const getStatusThunkCreator = id => async dispatch => {
+    let response = await profileAPI.getStatus(id)
+    dispatch(setStatusActionCreator(response.data))
 }
 
 // Change status on server, but only user`s status, which did a request, server rules
-export const updateStatusThunkCreator = (status) => dispatch => {
-    profileAPI.updateStatus(status).then(
-        response => {
-            if (response.data.resultCode === 0) {
-                dispatch(setStatusActionCreator(status))
-            }
-        }
-    )
+export const updateStatusThunkCreator = (status) => async dispatch => {
+    let response = await profileAPI.updateStatus(status)
+    if (response.data.resultCode === 0) dispatch(setStatusActionCreator(status))
 }
 
-export const deletePostActionCreator = (id) => {
+export const deletePostActionCreator = id => {
     return { type: 'DELETE_POST', id: id }
 }
