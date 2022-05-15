@@ -53,12 +53,18 @@ const Users = (props) => {
         <div>
             <div>
                 <div>
+                    {
+                        // pages.map(page_num => <button onClick={() => {
+                        //     props.setCurrentPage(page_num)
+                        //     props.getUsersLocal(page_num)
+                        // }}>{page_num}</button>)
+                    }
                     <input value={props.count_page_tmp} onChange={el => {
                         (props.count_page_tmp >= 1 && props.count_page_tmp <= pagesCount)
-                        ?
-                        props.setPageCountTmp(el.target.value)
-                        :
-                        props.setPageCountTmp(1)
+                            ?
+                            props.setPageCountTmp(el.target.value)
+                            :
+                            props.setPageCountTmp(1)
                     }}></input>
                     <div>Last page number: {pagesCount}</div>
                     <button onClick={() => {
