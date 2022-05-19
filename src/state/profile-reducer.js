@@ -6,6 +6,7 @@ const SET_USER_PROFILE = 'SET_USER_PROFILE'
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'
 const SET_STATUS = 'SET_STATUS'
 const DELETE_POST = 'DELETE_POST'
+const SET_PHOTO_profile_reducer = 'SET_PHOTO_profile_reducer'
 
 // initialState
 // post_text changin by callbacks in MyPosts
@@ -18,6 +19,7 @@ let initialState = {
     post_id: 1,
     user_profile: null,
     status: '',
+    photos: null,
 }
 
 function profileReducer(state = initialState, action) {
@@ -52,6 +54,12 @@ function profileReducer(state = initialState, action) {
         case SET_STATUS:
             return {
                 ...state, status: action.status
+            }
+
+        case SET_PHOTO_profile_reducer:
+            return {
+                ...state,
+                user_profile: {...state.user_profile, photos: action.photos}
             }
 
         case DELETE_POST:
@@ -89,6 +97,13 @@ export function setUserProfile(user_profile) {
     }
 }
 
+export const setPhotoActionCreator = photos => {
+    return {
+        type: SET_PHOTO_profile_reducer,
+        photos: photos
+    }
+}
+
 export function toggleIsFetching(isFetching) {
     return { type: TOGGLE_IS_FETCHING, isFetching }
 }
@@ -118,6 +133,14 @@ export const getStatusThunkCreator = id => async dispatch => {
 export const updateStatusThunkCreator = (status) => async dispatch => {
     let response = await profileAPI.updateStatus(status)
     if (response.data.resultCode === 0) dispatch(setStatusActionCreator(status))
+}
+
+export const savePhotoThunkCreator = (photo) => async dispatch => {
+    let response = await profileAPI.savePhoto(photo)
+
+    if (response.data.resultCode === 0) {
+        dispatch(setPhotoActionCreator(response.data.data.photos))
+    }
 }
 
 export const deletePostActionCreator = id => {

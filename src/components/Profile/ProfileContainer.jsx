@@ -16,6 +16,7 @@ import {
 import withAuthRedirect from '../../hoc/withAuthRedirect'
 import { compose } from 'redux'
 import { getMyProfileThunkCreator } from '../../state/auth-reducer'
+import { savePhotoThunkCreator } from '../../state/profile-reducer'
 
 // wrapper to use react router's v6 hooks in class component(to use HOC pattern, like in router v5)
 function withRouter(Component) {
@@ -54,14 +55,25 @@ export class ProfileContainerC extends React.Component {
     }
 
     componentDidMount() {
-        this.getUsersLocal(23)
+        this.getUsersLocal()
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.router.params.userId !== prevProps.router.params.userId) {
+            this.getUsersLocal()
+        }
     }
 
     render() {
         return (
             <>
                 {this.props.isFetching ? <Preloader fetch_img={fetch_img} /> : null}
-                <Profile {...this.props} user_profile={this.props.user_profile} status={this.props.status} updateStatus={this.props.updateStatus}/>
+                <Profile {...this.props} 
+                user_profile={this.props.user_profile} 
+                status={this.props.status} 
+                updateStatus={this.props.updateStatus}
+                isOwner={!this.props.router.params.userId}
+                savePhoto={this.props.savePhoto}/>
             </>
         )
     }
@@ -84,6 +96,7 @@ let callbacks = {
     updateStatus: updateStatusThunkCreator,
     setStatus: setStatusActionCreator,
     getMyProfile: getMyProfileThunkCreator,
+    savePhoto: savePhotoThunkCreator,
 }
 
 

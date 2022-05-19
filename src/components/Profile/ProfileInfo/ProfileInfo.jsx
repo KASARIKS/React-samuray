@@ -1,10 +1,17 @@
 // Component displays user profile, check server documentation
 import React from 'react'
-import ProfileStatus from './ProfileStatus'
 import ProfileStatusWithHooks from './ProfileStatusWithHooks'
+import default_ava from '../images/favicon.ico'
 
 const ProfileInfo = (props) => {
     let user_info = props.user_profile
+
+    const onMainPhotoSelect = (el) => {
+        if (el.target.files.length) {
+            props.savePhoto(el.target.files[0])
+        }
+    }
+
     return (
         <div>
             <img
@@ -29,8 +36,16 @@ const ProfileInfo = (props) => {
                                     <div>
                                         <h3>{user_info.fullName}</h3>
                                         {
-
-                                            <img src={user_info.photos.small} alt='user-logo-small'></img>
+                                            <div>
+                                                <img src={user_info.photos.large || default_ava} alt='user-logo-large'></img>
+                                                {
+                                                    props.isOwner
+                                                    ?
+                                                    <input type={'file'} onChange={el => onMainPhotoSelect(el)}></input>
+                                                    :
+                                                    null
+                                                }
+                                            </div>
                                         }
                                         <p>Description: {user_info.lookingForAJobDescription}</p>
                                         <ProfileStatusWithHooks
