@@ -60,16 +60,18 @@ const Users = (props) => {
                         // }}>{page_num}</button>)
                     }
                     <input value={props.count_page_tmp} onChange={el => {
-                        (props.count_page_tmp >= 1 && props.count_page_tmp <= pagesCount)
-                            ?
-                            props.setPageCountTmp(el.target.value)
-                            :
-                            props.setPageCountTmp(1)
+                        props.setPageCountTmp(el.target.value)
                     }}></input>
                     <div>Last page number: {pagesCount}</div>
                     <button onClick={() => {
-                        props.setCurrentPage(props.count_page_tmp)
-                        props.getUsersLocal(props.count_page_tmp)
+                        if (props.count_page_tmp < 1 || props.count_page_tmp > pagesCount) {
+                            props.setCurrentPage(1)
+                            props.getUsersLocal(1)
+                        }
+                        else {
+                            props.setCurrentPage(props.count_page_tmp)
+                            props.getUsersLocal(props.count_page_tmp)
+                        }
                     }}>Select page</button>
                 </div>
                 {
