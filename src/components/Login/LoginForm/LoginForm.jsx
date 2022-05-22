@@ -49,6 +49,19 @@ const LoginFormP = (props) => {
                             <button type='submit'>Login</button>
                     }
                 </div>
+                <div>
+                    {
+                        props.state.captchaUrl
+                            ?
+                            <div>
+                                <img src={props.state.captchaUrl} alt='capthca-img'></img>
+                                <Field name='captchaUrl' type='text'></Field>
+                            </div>
+
+                            :
+                            null
+                    }
+                </div>
                 {status === undefined
                     ?
                     null
@@ -69,7 +82,11 @@ const LoginForm = (props) => {
     if (props.isAuth) return <Navigate to={'/profile'}></Navigate>
 
     return (
-        <LoginFormP state={local_state} LoginSubmit={props.LoginSubmit} />
+        <LoginFormP
+            state={local_state}
+            LoginSubmit={props.LoginSubmit}
+            captchaUrl={props.captchaUrl}
+        />
     )
 }
 

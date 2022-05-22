@@ -11,7 +11,11 @@ export class LoginContainer extends React.Component {
     return (
       <div>
         <h1>Login</h1>
-        <LoginForm state={this.props.login_state} LoginSubmit={this.props.LoginSubmit} isAuth={this.props.isAuth}/>
+        <LoginForm
+          state={this.props.login_state}
+          LoginSubmit={this.props.LoginSubmit}
+          isAuth={this.props.isAuth}
+        />
       </div>
     )
   }
@@ -24,7 +28,7 @@ function mapDispatchToProps(state) {
       email: '',
       password: '',
       remember_me: false,
-      captcha: true,
+      captchaUrl: state.auth.captchaUrl,
     },
     isAuth: state.auth.isAuth,
   }

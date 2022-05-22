@@ -1,9 +1,10 @@
-import { authAPI } from "../api/api"
+import { authAPI, securityAPI } from "../api/api"
 
 const SET_USER_DATA = 'SET_USER_DATA'
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'
 const TOGGLE_IS_FOLLOWING = 'TOGGLE_IS_FOLLOWING'
 const SET_INITIALIZED = 'SET_INITIALIZED'
+const SET_CAPTCHA_URL = 'SET_CAPTCHA_URL'
 
 // initialState
 // isFollowingInProcess - many usersId appends to this array when you clicks to the follow buttons very fast and server can`t handle all requests
@@ -15,6 +16,7 @@ let initialState = {
     isFetching: false,
     isFollowingInProcess: [],
     initialized: false,
+    captchaUrl: null,
 }
 
 function authReducer(state = initialState, action) {
@@ -43,6 +45,12 @@ function authReducer(state = initialState, action) {
                 initialized: action.initialized
             }
 
+        case SET_CAPTCHA_URL:
+            return {
+                ...state,
+                captchaUrl: action.captchaUrl
+            }
+
         default:
             return state
     }
@@ -67,6 +75,10 @@ export const setInitializedActionCreator = (initialized) => {
     return { type: SET_INITIALIZED, initialized }
 }
 
+export const setCaptchaUrlActionCreator = captchaUrl => {
+    return { type: SET_CAPTCHA_URL, captchaUrl }
+}
+
 // This thunk set initialState of this reducer, then this initialState sends to server and displays
 export const getMyProfileThunkCreator = (toggleIsFetching) =>
     async dispatch => {
@@ -87,6 +99,9 @@ export const loginThunkCreator = (login_state, setStatus) => async (dispatch) =>
         dispatch(getMyProfileThunkCreator(toggleIsFetching))
     }
     else {
+        if (response.data.resultCode === 10) {
+            dispatch(getCaptchaUrlThunkCreator())
+        }
         setStatus({ error: response.data.messages })
     }
 }
@@ -105,4 +120,10 @@ export const initializeThunkCreator = (toggleIsFetching) => (dispatch) => {
         .then(() => {
             dispatch(setInitializedActionCreator(true))
         })
+}
+
+export const getCaptchaUrlThunkCreator = () => async dispatch => {
+    const response = await securityAPI.getCaptchaUrl()
+
+    dispatch(setCaptchaUrlActionCreator(response.data.url))
 }
