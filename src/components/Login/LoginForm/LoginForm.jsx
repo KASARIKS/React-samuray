@@ -22,6 +22,7 @@ const LoginFormP = (props) => {
             validationSchema={validate}
             validateOnChange={false}
             onSubmit={(values, { setStatus }) => {
+                console.log(setStatus)
                 props.LoginSubmit(values, setStatus)
             }}>
             {({ errors, values, status }) => (<Form>

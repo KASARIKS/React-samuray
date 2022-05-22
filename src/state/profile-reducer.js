@@ -59,7 +59,7 @@ function profileReducer(state = initialState, action) {
         case SET_PHOTO_profile_reducer:
             return {
                 ...state,
-                user_profile: {...state.user_profile, photos: action.photos}
+                user_profile: { ...state.user_profile, photos: action.photos }
             }
 
         case DELETE_POST:
@@ -145,4 +145,15 @@ export const savePhotoThunkCreator = (photo) => async dispatch => {
 
 export const deletePostActionCreator = id => {
     return { type: 'DELETE_POST', id: id }
+}
+
+export const saveProfileThunkCreator = (profile, setStatus) => async () => {
+    let response = await profileAPI.saveProfile(profile)
+
+    if (response.data.resultCode === 0) {
+        window.location.reload()
+    }
+    else {
+        setStatus({ error: response.data.messages })
+    }
 }

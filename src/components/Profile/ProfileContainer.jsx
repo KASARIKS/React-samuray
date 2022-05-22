@@ -17,6 +17,7 @@ import withAuthRedirect from '../../hoc/withAuthRedirect'
 import { compose } from 'redux'
 import { getMyProfileThunkCreator } from '../../state/auth-reducer'
 import { savePhotoThunkCreator } from '../../state/profile-reducer'
+import { saveProfileThunkCreator } from '../../state/profile-reducer'
 
 // wrapper to use react router's v6 hooks in class component(to use HOC pattern, like in router v5)
 function withRouter(Component) {
@@ -97,6 +98,7 @@ let callbacks = {
     setStatus: setStatusActionCreator,
     getMyProfile: getMyProfileThunkCreator,
     savePhoto: savePhotoThunkCreator,
+    saveProfile: saveProfileThunkCreator,
 }
 
 
